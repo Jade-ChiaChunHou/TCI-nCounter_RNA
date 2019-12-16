@@ -201,6 +201,8 @@
   g2_1 = c('CCT2','CCT5','CCT6A','CCT7','CCT8')
   g2_2 = c('Pink1', 'Atg1','Atg8','SIRT1')
   g2_3 = c('PARP1','PARP2','MRPS5','Ubl-5')
+  g2_select1 = c('CCT2','CCT5','CCT6A','CCT7','CCT8')
+  g2_select2 = c('SIRT1','PARP1','PARP2')
   g2 = c('CCT2','CCT5','CCT6A','CCT7','CCT8','Pink1', 'Atg1','Atg8','SIRT1','FOXO','PARP1','PARP2','NADSYN','MRPS5','Ubl-5','SOD3') #,'Parkin'
   
   
@@ -284,6 +286,65 @@
   }
   
   
+  #####################################
+  # get g2 raw data: mean, std, p-value
+  
+  # concentration 1
+  folder = "/home/tcigene/jade/ncounter/result/plot/2603_2604/"
+  plant_name = "蕎麥種皮萃取液"
+  team_name = c("Mock", "17% 蕎麥種皮萃取液 0.25% 24h", "17% 蕎麥種皮萃取液 0.25% 48h","微脂粒 17% 蕎麥種皮 0.25% 24h", "微脂粒 17% 蕎麥種皮 0.25% 48h")
+  team = c("mock_nor", "X2603L.24h1", "X2603L.48h1", "X2604L.24h1", "X2604L.48h1", "X2603H.24h1", "X2603H.48h1", "X2604H.24h1", "X2604H.48h1")
+  color = c("#ABB2B9", "#F24D98", "#59D044", "#F3A002", "#F2F44D")
+  team_num = length(team)
+
+  
+  
+  # sample ex:2649
+  sample = mean[,team]
+  sample_std = std[,team[2:length(team)]]
+  sample_p = p_star[,team[2:length(team)]]
+  sample_p_val = p[,team[2:length(team)]]
+  
+  
+  
+  ###############
+  # G2: 抗老 g2_1
+  
+  # set variables (1) gene_group (2) team_number (3) team_name
+    group_name = "抗老"
+    group = g2
+    gene_num = length(group)
+    
+    
+    # get team mean
+    value = sample[group,]
+    #colnames(value) = c("Mock", "17% 蕎麥種皮萃取液 0.25% 24h", "17% 蕎麥種皮萃取液 0.25% 48h","微脂粒 17% 蕎麥種皮 0.25% 24h", "微脂粒 17% 蕎麥種皮 0.25% 48h",
+    #                    "17% 蕎麥種皮萃取液 0.5% 24h", "17% 蕎麥種皮萃取液 0.5% 48h", "微脂粒 17% 蕎麥種皮 0.5% 24h", "微脂粒 17% 蕎麥種皮 0.5% 48h")
+    # get team std
+    value_std = sample_std[group,]
+    #colnames(value_std) = c("17% 蕎麥種皮萃取液 0.25% 24h", "17% 蕎麥種皮萃取液 0.25% 48h","微脂粒 17% 蕎麥種皮 0.25% 24h", "微脂粒 17% 蕎麥種皮 0.25% 48h",
+    #                    "17% 蕎麥種皮萃取液 0.5% 24h", "17% 蕎麥種皮萃取液 0.5% 48h", "微脂粒 17% 蕎麥種皮 0.5% 24h", "微脂粒 17% 蕎麥種皮 0.5% 48h")
+    
+    # get team p-value
+    value_p_val = sample_p_val[group,]
+    #colnames(value_p_val) = c("17% 蕎麥種皮萃取液 0.25% 24h", "17% 蕎麥種皮萃取液 0.25% 48h","微脂粒 17% 蕎麥種皮 0.25% 24h", "微脂粒 17% 蕎麥種皮 0.25% 48h",
+    #                    "17% 蕎麥種皮萃取液 0.5% 24h", "17% 蕎麥種皮萃取液 0.5% 48h", "微脂粒 17% 蕎麥種皮 0.5% 24h", "微脂粒 17% 蕎麥種皮 0.5% 48h")  
+    
+    # get significant star
+    value_p = sample_p[group,]
+    #colnames(value_p) = c("17% 蕎麥種皮萃取液 0.25% 24h", "17% 蕎麥種皮萃取液 0.25% 48h","微脂粒 17% 蕎麥種皮 0.25% 24h", "微脂粒 17% 蕎麥種皮 0.25% 48h",
+    #                     "17% 蕎麥種皮萃取液 0.5% 24h", "17% 蕎麥種皮萃取液 0.5% 48h", "微脂粒 17% 蕎麥種皮 0.5% 24h", "微脂粒 17% 蕎麥種皮 0.5% 48h")
+    
+    # add space columns
+    
+    
+    result = cbind(value, rep("", gene_num), value_std, rep("", gene_num), value_p_val, rep("", gene_num), value_p)
+    
+    path = paste(folder, plant_name, "-", group_name, "_result.csv", sep = "")
+    write.csv(result, path)
+  
+  
+  
     ################
     ################
     # group bar plot
@@ -293,7 +354,7 @@
     plant_name = "蕎麥種皮萃取液"
     team_name = c("Mock", "17% 蕎麥種皮萃取液 0.25% 24h", "17% 蕎麥種皮萃取液 0.25% 48h","微脂粒 17% 蕎麥種皮 0.25% 24h", "微脂粒 17% 蕎麥種皮 0.25% 48h")
     team = c("mock_nor", "X2603L.24h1", "X2603L.48h1", "X2604L.24h1", "X2604L.48h1")
-    color = c("#ABB2B9", "#F24D98", "#59D044", "#F3A002", "#F2F44D")
+    color = c("cornflowerblue", "#82e0aa", "#148f77", "#f5b7b1", "#e74c3c")
     team_num = length(team)
     
     # concentration 2
@@ -309,6 +370,197 @@
     sample = mean[,team]
     sample_std = std[,team[2:length(team)]]
     sample_p = p_star[,team[2:length(team)]]
+    
+    
+      ###############
+      # G2: 抗老 g2_1
+      
+      # set variables (1) gene_group (2) team_number (3) team_name
+      group_name = "抗老 低濃度1"
+      group = g2_select1
+      gene_num = length(group)
+      
+      
+      # get team mean
+      value = sample[group,]
+      
+      avg = matrix(NA, nrow = dim(value)[1] * dim(value)[2], ncol = 1)
+      
+      i = 1
+      
+      for (row in 1:dim(value)[1]){
+        for(col in 1:dim(value)[2]){
+          avg[i, 1] = value[row, col]
+          i = i + 1
+        }
+      }
+      
+      # get team std
+      value_std = sample_std[group,]
+      mock_std = rep(0, rep(dim(value_std)[1]))
+      
+      value_std = cbind(mock_std, value_std)
+      value_std = as.data.frame(value_std)
+      
+      sd = matrix(NA, nrow = dim(value_std)[1] * dim(value_std)[2], ncol = 1)
+      
+      i = 1
+      
+      for (row in 1:dim(value_std)[1]){
+        for(col in 1:dim(value_std)[2]){
+          sd[i, 1] = value_std[row, col]
+          i = i + 1
+        }
+      }
+      
+      
+      # get team p-value
+      value_p = sample_p[group,]
+      mock_p = rep("", rep(dim(value_p)[1]))
+      
+      value_p = cbind(mock_p, value_p)
+      value_p = as.data.frame(value_p)
+      
+      p_team = matrix(NA, nrow = dim(value_p)[1] * dim(value_p)[2], ncol = 1)
+      
+      i = 1
+      
+      for (row in 1:dim(value_p)[1]){
+        for(col in 1:dim(value_p)[2]){
+          p_team[i, 1] = as.character(value_p[row, col])
+          i = i + 1
+        }
+      }
+      
+      # get the team name
+      team = rep(team_name, gene_num)
+      
+      # get the gene name
+      gene = matrix(NA, nrow = gene_num*team_num, ncol = 1)
+      
+      for (i in 1:length(group)){
+        
+        gene[(i*team_num-(team_num-1)):(i*team_num),1] = rep(group[i], team_num)
+        
+      }
+      
+      
+      # add the gene, team, avg for barplot
+      data = data.frame(gene, team, avg, sd, p_team)
+      
+      data = within(data, team <- factor(team, levels = team_name))
+      
+      
+      path = paste(folder, plant_name, "-", group_name, ".png", sep = "")
+      
+      ggplot(data, aes(fill = team, y = avg, x = gene)) + 
+        geom_bar(position = "dodge", stat = "identity") +
+        scale_fill_manual(values = color) +
+        geom_errorbar(aes(ymin = avg, ymax = avg + sd), width = .2, position = position_dodge(.9)) +
+        theme(text = element_text(size = 20), plot.title = element_text(hjust = 0.5)) +
+        xlab("Gene") + 
+        ylab("Relative expression ratio") + 
+        scale_y_continuous(breaks = seq(0, max(data$avg + data$sd), 0.2)) +
+        geom_text(aes(y = (avg + sd), label = p_team), position = position_dodge(width = 0.9), vjust = -0.1, size = 5)
+      
+      
+      ggsave(path)
+    
+    
+    ###########
+    # 抗老 g2_2
+    
+    # set variables (1) gene_group (2) team_number (3) team_name
+    group_name = "抗老 低濃度2"
+    group = g2_select2
+    gene_num = length(group)
+    
+    
+    # get team mean
+    value = sample[group,]
+    
+    avg = matrix(NA, nrow = dim(value)[1] * dim(value)[2], ncol = 1)
+    
+    i = 1
+    
+    for (row in 1:dim(value)[1]){
+      for(col in 1:dim(value)[2]){
+        avg[i, 1] = value[row, col]
+        i = i + 1
+      }
+    }
+    
+    # get team std
+    value_std = sample_std[group,]
+    mock_std = rep(0, rep(dim(value_std)[1]))
+    
+    value_std = cbind(mock_std, value_std)
+    value_std = as.data.frame(value_std)
+    
+    sd = matrix(NA, nrow = dim(value_std)[1] * dim(value_std)[2], ncol = 1)
+    
+    i = 1
+    
+    for (row in 1:dim(value_std)[1]){
+      for(col in 1:dim(value_std)[2]){
+        sd[i, 1] = value_std[row, col]
+        i = i + 1
+      }
+    }
+    
+    
+    # get team p-value
+    value_p = sample_p[group,]
+    mock_p = rep("", rep(dim(value_p)[1]))
+    
+    value_p = cbind(mock_p, value_p)
+    value_p = as.data.frame(value_p)
+    
+    p_team = matrix(NA, nrow = dim(value_p)[1] * dim(value_p)[2], ncol = 1)
+    
+    i = 1
+    
+    for (row in 1:dim(value_p)[1]){
+      for(col in 1:dim(value_p)[2]){
+        p_team[i, 1] = as.character(value_p[row, col])
+        i = i + 1
+      }
+    }
+    
+    # get the team name
+    team = rep(team_name, gene_num)
+    
+    # get the gene name
+    gene = matrix(NA, nrow = gene_num*team_num, ncol = 1)
+    
+    for (i in 1:length(group)){
+      
+      gene[(i*team_num-(team_num-1)):(i*team_num),1] = rep(group[i], team_num)
+      
+    }
+    
+    
+    # add the gene, team, avg for barplot
+    data = data.frame(gene, team, avg, sd, p_team)
+    
+    data = within(data, team <- factor(team, levels = team_name))
+    
+    
+    path = paste(folder, plant_name, "-", group_name, ".png", sep = "")
+    
+    ggplot(data, aes(fill = team, y = avg, x = gene)) + 
+      geom_bar(position = "dodge", stat = "identity") +
+      scale_fill_manual(values = color) +
+      geom_errorbar(aes(ymin = avg, ymax = avg + sd), width = .2, position = position_dodge(.9)) +
+      theme(text = element_text(size = 20), plot.title = element_text(hjust = 0.5)) +
+      xlab("Gene") + 
+      ylab("Relative expression ratio") + 
+      scale_y_continuous(breaks = seq(0, max(data$avg + data$sd), 0.2)) +
+      geom_text(aes(y = (avg + sd), label = p_team), position = position_dodge(width = 0.9), vjust = -0.1, size = 5)
+    
+    
+    ggsave(path)
+    
     
     
     
@@ -608,19 +860,209 @@
     
     
     
-    #################
-    # concentration 2
-    #################
+      #################
+      # concentration 2
+      #################
+      
+      # sample ex:2649
+      sample = mean[,team2]
+      sample_std = std[,team2[2:length(team2)]]
+      sample_p = p_star[,team2[2:length(team2)]]
+      
+      ###############
+      # G2: 抗老 g2_1
+      
+      # set variables (1) gene_group (2) team_number (3) team_name
+      group_name = "抗老 高濃度1"
+      group = g2_select1
+      gene_num = length(group)
+      
+      
+      # get team mean
+      value = sample[group,]
+      
+      avg = matrix(NA, nrow = dim(value)[1] * dim(value)[2], ncol = 1)
+      
+      i = 1
+      
+      for (row in 1:dim(value)[1]){
+        for(col in 1:dim(value)[2]){
+          avg[i, 1] = value[row, col]
+          i = i + 1
+        }
+      }
+      
+      # get team std
+      value_std = sample_std[group,]
+      mock_std = rep(0, rep(dim(value_std)[1]))
+      
+      value_std = cbind(mock_std, value_std)
+      value_std = as.data.frame(value_std)
+      
+      sd = matrix(NA, nrow = dim(value_std)[1] * dim(value_std)[2], ncol = 1)
+      
+      i = 1
+      
+      for (row in 1:dim(value_std)[1]){
+        for(col in 1:dim(value_std)[2]){
+          sd[i, 1] = value_std[row, col]
+          i = i + 1
+        }
+      }
+      
+      
+      # get team p-value
+      value_p = sample_p[group,]
+      mock_p = rep("", rep(dim(value_p)[1]))
+      
+      value_p = cbind(mock_p, value_p)
+      value_p = as.data.frame(value_p)
+      
+      p_team = matrix(NA, nrow = dim(value_p)[1] * dim(value_p)[2], ncol = 1)
+      
+      i = 1
+      
+      for (row in 1:dim(value_p)[1]){
+        for(col in 1:dim(value_p)[2]){
+          p_team[i, 1] = as.character(value_p[row, col])
+          i = i + 1
+        }
+      }
+      
+      # get the team name
+      team = rep(team_name2, gene_num)
+      
+      # get the gene name
+      gene = matrix(NA, nrow = gene_num*team_num, ncol = 1)
+      
+      for (i in 1:length(group)){
+        
+        gene[(i*team_num-(team_num-1)):(i*team_num),1] = rep(group[i], team_num)
+        
+      }
+      
+      
+      # add the gene, team, avg for barplot
+      data = data.frame(gene, team, avg, sd, p_team)
+      
+      data = within(data, team <- factor(team, levels = team_name2))
+      
+      
+      path = paste(folder, plant_name, "-", group_name, ".png", sep = "")
+      
+      ggplot(data, aes(fill = team, y = avg, x = gene)) + 
+        geom_bar(position = "dodge", stat = "identity") +
+        scale_fill_manual(values = color) +
+        geom_errorbar(aes(ymin = avg, ymax = avg + sd), width = .2, position = position_dodge(.9)) +
+        theme(text = element_text(size = 20), plot.title = element_text(hjust = 0.5)) +
+        xlab("Gene") + 
+        ylab("Relative expression ratio") + 
+        scale_y_continuous(breaks = seq(0, max(data$avg + data$sd), 0.2)) +
+        geom_text(aes(y = (avg + sd), label = p_team), position = position_dodge(width = 0.9), vjust = -0.1, size = 5)
+      
+      
+      ggsave(path)
+      
+      
+        ###########
+        # 抗老 g2_2
+        
+        # set variables (1) gene_group (2) team_number (3) team_name
+        group_name = "抗老 高濃度2"
+        group = g2_select2
+        gene_num = length(group)
+        
+        
+        # get team mean
+        value = sample[group,]
+        
+        avg = matrix(NA, nrow = dim(value)[1] * dim(value)[2], ncol = 1)
+        
+        i = 1
+        
+        for (row in 1:dim(value)[1]){
+          for(col in 1:dim(value)[2]){
+            avg[i, 1] = value[row, col]
+            i = i + 1
+          }
+        }
+        
+        # get team std
+        value_std = sample_std[group,]
+        mock_std = rep(0, rep(dim(value_std)[1]))
+        
+        value_std = cbind(mock_std, value_std)
+        value_std = as.data.frame(value_std)
+        
+        sd = matrix(NA, nrow = dim(value_std)[1] * dim(value_std)[2], ncol = 1)
+        
+        i = 1
+        
+        for (row in 1:dim(value_std)[1]){
+          for(col in 1:dim(value_std)[2]){
+            sd[i, 1] = value_std[row, col]
+            i = i + 1
+          }
+        }
+        
+        
+        # get team p-value
+        value_p = sample_p[group,]
+        mock_p = rep("", rep(dim(value_p)[1]))
+        
+        value_p = cbind(mock_p, value_p)
+        value_p = as.data.frame(value_p)
+        
+        p_team = matrix(NA, nrow = dim(value_p)[1] * dim(value_p)[2], ncol = 1)
+        
+        i = 1
+        
+        for (row in 1:dim(value_p)[1]){
+          for(col in 1:dim(value_p)[2]){
+            p_team[i, 1] = as.character(value_p[row, col])
+            i = i + 1
+          }
+        }
+        
+        # get the team name
+        team = rep(team_name2, gene_num)
+        
+        # get the gene name
+        gene = matrix(NA, nrow = gene_num*team_num, ncol = 1)
+        
+        for (i in 1:length(group)){
+          
+          gene[(i*team_num-(team_num-1)):(i*team_num),1] = rep(group[i], team_num)
+          
+        }
+        
+        
+        # add the gene, team, avg for barplot
+        data = data.frame(gene, team, avg, sd, p_team)
+        
+        data = within(data, team <- factor(team, levels = team_name2))
+        
+        
+        path = paste(folder, plant_name, "-", group_name, ".png", sep = "")
+        
+        ggplot(data, aes(fill = team, y = avg, x = gene)) + 
+          geom_bar(position = "dodge", stat = "identity") +
+          scale_fill_manual(values = color) +
+          geom_errorbar(aes(ymin = avg, ymax = avg + sd), width = .2, position = position_dodge(.9)) +
+          theme(text = element_text(size = 20), plot.title = element_text(hjust = 0.5)) +
+          xlab("Gene") + 
+          ylab("Relative expression ratio") + 
+          scale_y_continuous(breaks = seq(0, max(data$avg + data$sd), 0.2)) +
+          geom_text(aes(y = (avg + sd), label = p_team), position = position_dodge(width = 0.9), vjust = -0.1, size = 5)
+        
+        
+        ggsave(path)
+      
     
-    # sample ex:2649
-    sample = mean[,team2]
-    sample_std = std[,team2[2:length(team2)]]
-    sample_p = p_star[,team2[2:length(team2)]]
     
     
     
-    
-    ###############
+      ###############
     # G2: 抗老 g2_1
     
     # set variables (1) gene_group (2) team_number (3) team_name
@@ -903,3 +1345,7 @@
     
     
     ggsave(path)
+    
+    
+    
+  
